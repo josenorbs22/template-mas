@@ -45,25 +45,25 @@
 .set.add(Ruas, Rua8)
 .set.add(Ruas, Rua9) */
 
-distancia(Rua1, 300).
-distancia(Rua2, 240).
-distancia(Rua3, 250).
-distancia(Rua4, 210).
-distancia(Rua5, 235).
-distancia(Rua6, 300).
-distancia(Rua7, 400).
-distancia(Rua8, 325).
-distancia(Rua9, 320).
+distancia(rua1, 300).
+distancia(rua2, 240).
+distancia(rua3, 250).
+distancia(rua4, 210).
+distancia(rua5, 235).
+distancia(rua6, 300).
+distancia(rua7, 400).
+distancia(rua8, 325).
+distancia(rua9, 320).
 
-vel_maxima(Rua1, 60).
-vel_maxima(Rua2, 50).
-vel_maxima(Rua3, 80).
-vel_maxima(Rua4, 90).
-vel_maxima(Rua5, 80).
-vel_maxima(Rua6, 40).
-vel_maxima(Rua7, 40).
-vel_maxima(Rua8, 30).
-vel_maxima(Rua9, 60).
+vel_maxima(rua1, 60).
+vel_maxima(rua2, 50).
+vel_maxima(rua3, 80).
+vel_maxima(rua4, 90).
+vel_maxima(rua5, 80).
+vel_maxima(rua6, 40).
+vel_maxima(rua7, 40).
+vel_maxima(rua8, 30).
+vel_maxima(rua9, 60).
 
 +!chegar_destino    
     <-  //Percorrer distância dentro da rua de destino até o ponto de chegada
@@ -72,8 +72,8 @@ vel_maxima(Rua9, 60).
 +!achar_caminho 
     <- //consultar GPS para achar melhor caminho para o destino
         .queue.create(caminho);
-        .queue.add_all(caminho, [Rua1, Rua3, Rua4]);
-        rua_atual(Rua1).
+        .queue.add_all(caminho, [rua1, rua3, rua4]);
+        rua_atual(rua1).
 
 +!entrar_em_rua: rua_atual(x) & destino(y) & x \== y
     <-  .queue.remove(caminho, r);
@@ -98,15 +98,15 @@ vel_maxima(Rua9, 60).
         !!verificar_obstaculo;
         .print("Movendo-se pela rua: ", x).
 
-+!acelerar: velocidade(vel) & rua_atual(x) & vel_maxima(x, velMax) & vel <= velMax
-    <- -velocidade(vel);
-        +velocidade(vel + 5);
-        .print("Acelerando. Velocidade nova: ", vel).
++!acelerar: velocidade(Vel) & rua_atual(x) & vel_maxima(x, VelMax) & Vel <= VelMax
+    <- -velocidade(Vel);
+        +velocidade(Vel + 5);
+        .print("Acelerando. Velocidade nova: ", Vel).
 
-+!desacelerar: velocidade(vel) & rua_atual(x) & vel_maxima(x, velMax) & vel >= velMax
-    <- -velocidade(vel);
-        +velocidade(vel - 5);
-        .print("Desacelerando. Velocidade nova: ", vel).
++!desacelerar: velocidade(Vel) & rua_atual(x) & vel_maxima(x, velMax) & Vel >= VelMax
+    <- -velocidade(Vel);
+        +velocidade(Vel - 5);
+        .print("Desacelerando. Velocidade nova: ", Vel).
 
 +!frear 
     <-  //acionar_freios
