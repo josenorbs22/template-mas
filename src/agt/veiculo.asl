@@ -4,7 +4,7 @@
 !acelerar.
 !chegar_destino.
 !verificar_obstaculo. */
-!entrar_em_rua.
+//!entrar_em_rua.
 
 /* .map.create(Rua1)
 .map.put(Rua1, dist, 300)
@@ -45,71 +45,93 @@
 .set.add(Ruas, Rua8)
 .set.add(Ruas, Rua9) */
 
-distancia(rua1, 300).
-distancia(rua2, 240).
-distancia(rua3, 250).
-distancia(rua4, 210).
-distancia(rua5, 235).
-distancia(rua6, 300).
-distancia(rua7, 400).
-distancia(rua8, 325).
-distancia(rua9, 320).
+distancia(Rua1, 300).
+distancia(Rua2, 240).
+distancia(Rua3, 250).
+distancia(Rua4, 210).
+distancia(Rua5, 235).
+distancia(Rua6, 300).
+distancia(Rua7, 400).
+distancia(Rua8, 325).
+distancia(Rua9, 320).
 
-vel_maxima(rua1, 60).
-vel_maxima(rua2, 50).
-vel_maxima(rua3, 80).
-vel_maxima(rua4, 90).
-vel_maxima(rua5, 80).
-vel_maxima(rua6, 40).
-vel_maxima(rua7, 40).
-vel_maxima(rua8, 30).
-vel_maxima(rua9, 60).
+vel_maxima(Rua1, 60).
+vel_maxima(Rua2, 50).
+vel_maxima(Rua3, 80).
+vel_maxima(Rua4, 90).
+vel_maxima(Rua5, 80).
+vel_maxima(Rua6, 40).
+vel_maxima(Rua7, 40).
+vel_maxima(Rua8, 30).
+vel_maxima(Rua9, 60).
+!start.
 
-+!chegar_destino    
++!start
+  <-    createWorkspace(carro);
+       	joinWorkspace(carro,Ofa);
+        makeArtifact("gui","artifacts.MySimpleGUI",[],D);
+        makeArtifact("gps","artifacts.GPS",[],GPS);
+        makeArtifact("ctrl_velocidade","artifacts.Ctrl_velocidade",[],ACELFREIO);
+        //makeArtifact("antena","artifacts.MySimpleGUI",[],ANT);
+        //makeArtifact("cambio","artifacts.MySimpleGUI",[],CAMBIO);
+  		focus(D);
+  		println("Hello").
+
++!chegar_destino: ~chegou    
+    <-  //Percorrer distância dentro da rua de destino até o ponto de chegada
+        !achar_caminho;
+        !entrar_em_rua.
+
++!chegar_destino: chegou    
     <-  //Percorrer distância dentro da rua de destino até o ponto de chegada
         .print("Chegou ao destino").
 
-+!achar_caminho 
-    <- //consultar GPS para achar melhor caminho para o destino
-        .queue.create(caminho);
-        .queue.add_all(caminho, [rua1, rua3, rua4]);
-        rua_atual(rua1).
++!achar_caminho
+    <-  .send(orquestrador, achieve)
 
-+!entrar_em_rua: rua_atual(x) & destino(y) & x \== y
-    <-  .queue.remove(caminho, r);
-        -rua_atual(x);
-        +rua_atual(r);
-        .print("Andando por ", r);
++!achar_caminho(caminho)[source(Orquestrador)]
+    <- //consultar GPS para achar melhor caminho para o destino
+        caminho_atual(caminho).
+
++!entrar_em_rua: rua_atual(X) & destino(Y) & X \== Y
+    <-  .queue.remove(caminho, R);
+        -rua_atual(X);
+        +rua_atual(R);
+        .print("Andando por ", R);
         !moverse.
 
-+!entrar_em_rua: rua_atual(x) & destino(x)
-    <- .queue.remove(caminho, r);
-        -rua_atual(x);
-        +rua_atual(r);
-        .print("Chegando no destino ", r);
++!entrar_em_rua: rua_atual(X) & destino(X)
+    <- .queue.remove(caminho, R);
+        -rua_atual(X);
+        +rua_atual(R);
+        .print("Chegando no destino ", R);
+        chegou;
         !chegar_destino.
 
 +!moverse: tem_obstaculo
     <- !frear;
         .drop_intention(acelerar).
 
-+!moverse: rua_atual(x)
++!moverse: rua_atual(X)
     <- !!acelerar;
         !!verificar_obstaculo;
-        .print("Movendo-se pela rua: ", x).
+        .print("Movendo-se pela rua: ", X).
 
-+!acelerar: velocidade(Vel) & rua_atual(x) & vel_maxima(x, VelMax) & Vel <= VelMax
-    <- -velocidade(Vel);
++!acelerar: velocidade(Vel) & rua_atual(X) & vel_maxima(X, VelMax) & Vel <= VelMax
+    <-  aum_vel;
+        -velocidade(Vel);
         +velocidade(Vel + 5);
         .print("Acelerando. Velocidade nova: ", Vel).
 
-+!desacelerar: velocidade(Vel) & rua_atual(x) & vel_maxima(x, velMax) & Vel >= VelMax
-    <- -velocidade(Vel);
++!desacelerar: velocidade(Vel) & rua_atual(X) & vel_maxima(X, VelMax) & Vel >= VelMax
+    <-  dim_vel;
+        -velocidade(Vel);
         +velocidade(Vel - 5);
         .print("Desacelerando. Velocidade nova: ", Vel).
 
 +!frear 
     <-  //acionar_freios
+        pisar_freio;
         .print("Freiando").
 
 

@@ -1,0 +1,13 @@
+MAS trafego {
+
+	infrastructure: Centralised
+
+	environment: jaca.CartagoEnvironment
+
+	agents:
+		agent1 carro agentArchClass jaca.CAgentArch;
+		//agent2 gui1 agentArchClass jaca.CAgentArch;
+		//agent3 gui2 agentArchClass jaca.CAgentArch;
+	aslSourcePath:
+		"src/agt";
+}

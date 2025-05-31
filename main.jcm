@@ -9,9 +9,13 @@
     JaCaMo 1.2
 */
 
-mas main {
-    agent carro: veiculo.asl{
-      beliefs: rua_atual(Rua1), destino(Rua4), velocidade(0)
-      goals: chegar_destino
-    }
+mas trafego {
+  agent carro: veiculo.asl{
+    beliefs: rua_atual(Rua1), destino(Rua4), velocidade(0), chegou(false)
+    goals: chegar_destino
+  }
+
+  agent orquestrador: orquestrador.asl{
+    
+  }
 }
