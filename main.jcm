@@ -10,8 +10,12 @@
 */
 
 mas trafego {
-  agent carro: veiculo.asl{
-    beliefs: rua_atual("Rua1"), destino("Rua4"), velocidade(0), chegou(false)
+  agent corolla: veiculo.asl{
+    beliefs: rua_atual("Rua1P1"), destino("Rua7"), velocidade(0), chegou(false)
+  }
+
+  agent porsche911: veiculo.asl{
+    beliefs: rua_atual("Rua4P1"), destino("Rua2"), velocidade(0), chegou(false)
   }
 
   agent orquestrador: orquestrador.asl{}

@@ -14,24 +14,23 @@ public class Ctrl_velocidade extends Artifact {
     }
 
     @OPERATION
-    void aum_vel(){
+    void aum_dim_vel(int velMax){
         ObsProperty prop = getObsProperty("velocidade");
-        prop.updateValue(prop.intValue() + 5);
-        System.out.println("Aumentando a velocidade do carro");
-        signal("velocidadeNova", prop.intValue());
-    }
-
-    @OPERATION
-    void dim_vel(){
-        ObsProperty prop = getObsProperty("velocidade");
-        prop.updateValue(prop.intValue() - 5);
-        System.out.println("Diminuindo a velocidade do carro");
-        signal("velocidadeNova", prop.intValue());
+        if(prop.intValue() < velMax){
+            prop.updateValue(prop.intValue() + 5);
+            System.out.println("Aumentando a velocidade do carro");
+        } else if(prop.intValue() > velMax){
+            prop.updateValue(prop.intValue() - 5);
+            System.out.println("Diminuindo a velocidade do carro");
+        } else {
+            System.out.println("Velocidade máxima atingida");
+        }
+        System.out.println("Velocidade Nova: " + prop.intValue());
+        //signal("velocidadeNova", prop.intValue());
     }
 
     @OPERATION
     void pisar_freio(){
-        System.out.println("Parando");
         ObsProperty prop = getObsProperty("velocidade");
         while(prop.intValue() > 0){
             prop.updateValue(prop.intValue() - 20);
